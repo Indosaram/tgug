@@ -12,10 +12,11 @@ import (
 	"net/http"
 	"net/textproto"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
-var GOBIN string = os.Getenv("GOBIN")
+var AUTH string
 
 type GhostManager struct {
 	Configs Config
@@ -24,6 +25,9 @@ type GhostManager struct {
 }
 
 func NewGhostManager() *GhostManager {
+	homeDir, _ := os.UserHomeDir()
+	AUTH = filepath.Join(homeDir, ".tgug")
+	fmt.Println(AUTH)
 	g := new(GhostManager)
 	g.Configs = loadConfig()
 	g.BaseUrl = g.Configs.Domain + "/ghost/api/v3/admin"
@@ -68,14 +72,14 @@ func newConfig() Config {
 	if err != nil {
 		fmt.Println(err)
 	}
-	os.WriteFile(GOBIN+"/auth.json", byteArray, 0755)
+	os.WriteFile(filepath.Join(AUTH, "auth.json"), byteArray, 0755)
 
 	return config
 }
 
 func loadConfig() Config {
 	var config Config
-	jsonFile, err := os.Open(GOBIN + "/auth.json")
+	jsonFile, err := os.Open(filepath.Join(AUTH, "auth.json"))
 	defer jsonFile.Close()
 	if err != nil {
 		config = newConfig()
