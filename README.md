@@ -1,8 +1,5 @@
 # TGUG - Typora-Ghost image Uploader in Go
 
-> This app is being actively developed. Currently tgug only supports Mac OS and Linux, but will support Windows.
-
-
 
 In any chance if you want to know why I developed this, check [this](https://devbull.xyz/tgug/) out. (It's written in Korean.)
 
@@ -57,7 +54,7 @@ tgug -f=image1.jpg,image2.png,...
 
 - [ ] Documentation
 - [ ] Exception control
-  - [ ] authentication info with Regex
+  - [x] authentication info with Regex
   - [ ] Invalid file path
 - [ ] Encryption of `auth.json` file
 - [ ] Seamless integration with Typora
