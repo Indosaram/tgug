@@ -13,6 +13,8 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"regexp"
+	"runtime"
 	"strings"
 )
 
@@ -42,27 +44,50 @@ type Config struct {
 	Password string `json:"password"`
 }
 
+func cleanText(text string) string {
+	switch os := runtime.GOOS; os {
+	case "windows":
+		text = strings.Replace(text, "\r\n", "", -1)
+	default:
+		text = strings.Replace(text, "\n", "", -1)
+	}
+
+	return text
+}
+
+func assertTextFormat(regex string, inputMessage string, errorMessage string) string {
+	for {
+		if inputMessage != "" {
+			fmt.Print(inputMessage)
+		}
+
+		reader := bufio.NewReader(os.Stdin)
+		text, _ := reader.ReadString('\n')
+		text = cleanText(text)
+		matched, _ := regexp.MatchString(regex, text)
+
+		if matched {
+			return text
+		}
+
+		if errorMessage != "" {
+			fmt.Println(errorMessage)
+		}
+	}
+}
+
 func newConfig() Config {
 	var config Config
 
 	fmt.Println("Ghost login information is needed to be configured. Type your Ghost blog information.")
 
-	fmt.Print("Ghost blog domain (https://example.com) : ")
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
-	config.Domain = text
-
-	fmt.Print("Username (example@exmple.com) : ")
-	reader = bufio.NewReader(os.Stdin)
-	text, _ = reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
-	config.Username = text
+	config.Domain = assertTextFormat("(https|http):\\/\\/.+", "Ghost blog domain (https://example.com) : ", "Invalid URL")
+	config.Username = assertTextFormat(".+\\@.+\\..+", "Username (example@exmple.com) : ", "Invalid username")
 
 	fmt.Print("Password : ")
-	reader = bufio.NewReader(os.Stdin)
-	text, _ = reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
+	reader := bufio.NewReader(os.Stdin)
+	text, _ := reader.ReadString('\n')
+	text = cleanText(text)
 	config.Password = text
 
 	fmt.Println("\nReview your information :")

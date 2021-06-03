@@ -10,23 +10,35 @@ In any chance if you want to know why I developed this, check [this](https://dev
 
 ## Installation
 
-This command will install binary in `$GOBIN` directory. If you haven't set your `$GOBIN`, it will install in `~/go/bin`.  
-
-```bash
-git clone https://github.com/Indosaram/tgug
-cd tgug
-
-# make a directory reserved for tgug and install in GOBIN path
-sudo mkdir ~/.tgug
-GOBIN=/usr/local/bin go install
-```
-
-`tgug` will store authentication file `auth.json` in `~/.tgug`.  If you first start the program, it promts you to type information of your Ghost blog.
+`tgug` will store authentication file `auth.json` in your home directory, i.e. `~/.tgug` for mac and linux. If you start the program for the first time, it promts you to type information of your Ghost blog.
 
 - Domain
 - Username (email)
 - Password
 
+Clone the repo and go to the directory.
+
+```bash
+git clone https://github.com/Indosaram/tgug
+cd tgug
+```
+
+### MacOS and Linux
+
+This command will install binary in `$GOBIN` directory. If you haven't set your `$GOBIN`, it will install in `~/go/bin`.  
+
+```bash
+# make a directory reserved for tgug and install in GOBIN path
+sudo mkdir ~/.tgug
+GOBIN=/usr/local/bin go install
+```
+
+### Windows
+
+In Windows, you need to `.tgug` folder in your home directory. (i.e. `C:\Users\USERNAME\.tgug`) Next, type following command in shell.
+```cmd
+go install
+```
 
 
 ## Usage
